@@ -13,6 +13,7 @@ describe('Bodies', function () {
     request(app.listen())
     .get('/stream')
     .expect('Content-Type', /application\/javascript/)
+    .expect('Content-Length', body.length)
     .expect(body, done);
   })
 

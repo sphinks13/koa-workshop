@@ -1,5 +1,6 @@
 
 var fs = require('fs');
+var stat = require('../01-co/index').stat;
 var koa = require('koa');
 
 var app = module.exports = koa();
@@ -12,8 +13,10 @@ var app = module.exports = koa();
 app.use(function* (next) {
   if (this.request.path !== '/stream') return yield* next;
 
-  // this.response.type =
-  // this.response.body =
+  var fileStat = yield stat(__filename);
+  this.response.type = 'application/javascript; charset=utf-8';
+  this.response.body = fs.createReadStream(__filename);
+  this.response.length = fileStat.size;
 });
 
 /**
@@ -23,5 +26,5 @@ app.use(function* (next) {
 app.use(function* (next) {
   if (this.request.path !== '/json') return yield* next;
 
-  // this.response.body =
+   this.response.body = {message:'hello world'};
 });
