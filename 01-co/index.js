@@ -12,7 +12,9 @@ var fs = require('fs');
  */
 
 exports.stat = function (filename) {
-
+    return function(callback) {
+        fs.stat(filename, callback);
+    }
 };
 
 /**
@@ -32,5 +34,15 @@ exports.stat = function (filename) {
  */
 
 exports.exists = function (filename) {
-
+    return function(callback) {
+        fs.stat(filename, function(err) {
+            if (err && err.code == 'ENOENT') {
+                callback(null, false);
+            } else if (err && err.code != 'ENOENT') {
+                callback(err);
+            } else {
+                callback(null, true);
+            }
+        });
+    }
 };
